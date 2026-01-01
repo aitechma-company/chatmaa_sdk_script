@@ -1,12 +1,12 @@
-# ChatMAA Widget Installation Guide
+# ChatMAA Widget Integration Guide
 
-The ChatMAA widget is a lightweight JavaScript script that adds a chat interface to any website. It creates a floating launcher button and opens a chat widget in an iframe when clicked.
+Add the ChatMAA AI Chat Assistant to your website with just a few lines of code. The widget creates a floating chat button that opens a full-featured chat interface in an iframe.
 
-## Installation
+**Get started:** Create your account at [www.chatmaa.com](https://www.chatmaa.com) to get your ChatMAA instance URL.
 
-### Method 1: Direct Script Include
+## Quick Start
 
-Add the script to your HTML page before the closing `</body>` tag:
+The ChatMAA widget is hosted on our CDN. Simply add the configuration and script to your HTML:
 
 ```html
 <!DOCTYPE html>
@@ -17,49 +17,92 @@ Add the script to your HTML page before the closing `</body>` tag:
 <body>
     <!-- Your website content -->
     
-    <!-- ChatMAA Widget Script -->
+    <!-- ChatMAA Configuration -->
     <script>
         window.ChatMAAConfig = {
-            baseUrl: "https://your-domain.com",  // Required: Your ChatMAA instance domain
-            email: "user@example.com",             // Optional: User email
-            name: "John Doe"                       // Optional: User name
+            baseUrl: "https://your-instance.chatmaa.com"  // Your ChatMAA instance URL
         };
     </script>
-    <script src="path/to/script.js"></script>
+    
+    <!-- ChatMAA Widget Script -->
+    <script src="https://cdn.chatmaa.com/js/script.js"></script>
 </body>
 </html>
 ```
 
-### Method 2: CDN (if hosted)
+That's it! The chat button will appear in the bottom-right corner of your page.
 
-If the script is hosted on a CDN:
+## Configuration Options
 
-```html
-<script>
-    window.ChatMAAConfig = {
-        baseUrl: "https://your-domain.com",
-        email: "user@example.com",
-        name: "John Doe"
-    };
-</script>
-<script src="https://cdn.example.com/chatmaa-widget.js"></script>
-```
-
-### Method 3: NPM Package (if published)
-
-```bash
-npm install chatmaa-widget
-```
+Configure the widget by setting `window.ChatMAAConfig` before loading the script:
 
 ```javascript
-import 'chatmaa-widget';
+window.ChatMAAConfig = {
+    // Required: Your ChatMAA instance URL (from www.chatmaa.com)
+    baseUrl: "https://your-instance.chatmaa.com",
+    
+    // Optional: User email (for personalized experience)
+    email: "user@example.com",
+    
+    // Optional: User name (for personalized experience)
+    name: "John Doe",
+    
+    // Optional: Launcher button position
+    // Options: "bottom-right" (default), "bottom-left", "top-right", "top-left"
+    position: "bottom-right",
+    
+    // Optional: Launcher button color (hex color)
+    primaryColor: "#2563eb",
+    
+    // Optional: Launcher button icon (emoji or HTML)
+    launcherIcon: "💬",
+    
+    // Optional: Widget dimensions (desktop only)
+    width: 360,      // Widget width in pixels
+    height: 500,     // Widget height in pixels
+    
+    // Optional: z-index for the widget
+    zIndex: 9999
+};
 ```
 
-## Next.js App Router Installation
+## Integration Guides
 
-For Next.js 13+ App Router, add the Script component directly in your root layout:
+### Vanilla JavaScript / HTML
 
-**`app/layout.tsx` (TypeScript):**
+For any standard HTML website, add the script before the closing `</body>` tag:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+</head>
+<body>
+    <h1>Welcome to My Website</h1>
+    
+    <!-- ChatMAA Configuration -->
+<script>
+    window.ChatMAAConfig = {
+            baseUrl: "https://your-instance.chatmaa.com",
+            email: "user@example.com",  // Optional
+            name: "John Doe"            // Optional
+    };
+</script>
+    
+    <!-- ChatMAA Widget -->
+    <script src="https://cdn.chatmaa.com/js/script.js"></script>
+</body>
+</html>
+```
+
+### Next.js App Router (Next.js 13+)
+
+For Next.js 13+ with the App Router, add the configuration and script in your root layout:
+
+**`app/layout.tsx`:**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -79,23 +122,23 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
+        
+        {/* ChatMAA Configuration */}
         <Script id="chatmaa-config" strategy="beforeInteractive">
           {`
             window.ChatMAAConfig = {
-              baseUrl: "${process.env.NEXT_PUBLIC_CHATMAA_BASE_URL || 'https://your-domain.com'}",
+              baseUrl: "${process.env.NEXT_PUBLIC_CHATMAA_BASE_URL || 'https://your-instance.chatmaa.com'}",
               ${process.env.NEXT_PUBLIC_CHATMAA_EMAIL ? `email: "${process.env.NEXT_PUBLIC_CHATMAA_EMAIL}",` : ''}
               ${process.env.NEXT_PUBLIC_CHATMAA_NAME ? `name: "${process.env.NEXT_PUBLIC_CHATMAA_NAME}",` : ''}
               position: "${process.env.NEXT_PUBLIC_CHATMAA_POSITION || 'bottom-right'}",
               primaryColor: "${process.env.NEXT_PUBLIC_CHATMAA_PRIMARY_COLOR || '#2563eb'}",
-              launcherIcon: "${process.env.NEXT_PUBLIC_CHATMAA_LAUNCHER_ICON || '💬'}",
-              width: ${process.env.NEXT_PUBLIC_CHATMAA_WIDTH || 360},
-              height: ${process.env.NEXT_PUBLIC_CHATMAA_HEIGHT || 500},
-              zIndex: ${process.env.NEXT_PUBLIC_CHATMAA_Z_INDEX || 9999}
             };
           `}
         </Script>
+        
+        {/* ChatMAA Widget */}
         <Script 
-          src="/script.js" 
+          src="https://cdn.chatmaa.com/js/script.js" 
           strategy="afterInteractive"
         />
       </body>
@@ -104,7 +147,17 @@ export default function RootLayout({
 }
 ```
 
-**`app/layout.js` (JavaScript):**
+**Environment Variables (`.env.local`):**
+
+```env
+NEXT_PUBLIC_CHATMAA_BASE_URL=https://your-instance.chatmaa.com
+NEXT_PUBLIC_CHATMAA_EMAIL=user@example.com
+NEXT_PUBLIC_CHATMAA_NAME=John Doe
+NEXT_PUBLIC_CHATMAA_POSITION=bottom-right
+NEXT_PUBLIC_CHATMAA_PRIMARY_COLOR=#2563eb
+```
+
+**`app/layout.js` (JavaScript version):**
 
 ```javascript
 import Script from 'next/script'
@@ -117,20 +170,14 @@ export default function RootLayout({ children }) {
         <Script id="chatmaa-config" strategy="beforeInteractive">
           {`
             window.ChatMAAConfig = {
-              baseUrl: "${process.env.NEXT_PUBLIC_CHATMAA_BASE_URL || 'https://your-domain.com'}",
+              baseUrl: "${process.env.NEXT_PUBLIC_CHATMAA_BASE_URL || 'https://your-instance.chatmaa.com'}",
               ${process.env.NEXT_PUBLIC_CHATMAA_EMAIL ? `email: "${process.env.NEXT_PUBLIC_CHATMAA_EMAIL}",` : ''}
               ${process.env.NEXT_PUBLIC_CHATMAA_NAME ? `name: "${process.env.NEXT_PUBLIC_CHATMAA_NAME}",` : ''}
-              position: "${process.env.NEXT_PUBLIC_CHATMAA_POSITION || 'bottom-right'}",
-              primaryColor: "${process.env.NEXT_PUBLIC_CHATMAA_PRIMARY_COLOR || '#2563eb'}",
-              launcherIcon: "${process.env.NEXT_PUBLIC_CHATMAA_LAUNCHER_ICON || '💬'}",
-              width: ${process.env.NEXT_PUBLIC_CHATMAA_WIDTH || 360},
-              height: ${process.env.NEXT_PUBLIC_CHATMAA_HEIGHT || 500},
-              zIndex: ${process.env.NEXT_PUBLIC_CHATMAA_Z_INDEX || 9999}
             };
           `}
         </Script>
         <Script 
-          src="/script.js" 
+          src="https://cdn.chatmaa.com/js/script.js" 
           strategy="afterInteractive"
         />
       </body>
@@ -139,88 +186,39 @@ export default function RootLayout({ children }) {
 }
 ```
 
-**Or directly in the config (simpler approach):**
+### Next.js Page Router
+
+For Next.js with the Pages Router, add the script in your `_app.js` or `_app.tsx`:
+
+**`pages/_app.tsx`:**
 
 ```typescript
-import type { Metadata } from 'next'
+import type { AppProps } from 'next/app'
 import Script from 'next/script'
 
-export const metadata: Metadata = {
-  title: 'My App',
-  description: 'My App Description',
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <html lang="en">
-      <body>
-        {children}
+    <>
         <Script id="chatmaa-config" strategy="beforeInteractive">
           {`
             window.ChatMAAConfig = {
-              baseUrl: "https://your-domain.com",
-              email: "user@example.com",
-              name: "John Doe",
-              position: "bottom-left",
-              primaryColor: "#10b981",
-              launcherIcon: "💬",
-              width: 400,
-              height: 600,
-              zIndex: 10000
+            baseUrl: "${process.env.NEXT_PUBLIC_CHATMAA_BASE_URL || 'https://your-instance.chatmaa.com'}",
+            ${process.env.NEXT_PUBLIC_CHATMAA_EMAIL ? `email: "${process.env.NEXT_PUBLIC_CHATMAA_EMAIL}",` : ''}
+            ${process.env.NEXT_PUBLIC_CHATMAA_NAME ? `name: "${process.env.NEXT_PUBLIC_CHATMAA_NAME}",` : ''}
             };
           `}
         </Script>
         <Script 
-          src="/script.js" 
+        src="https://cdn.chatmaa.com/js/script.js" 
           strategy="afterInteractive"
         />
-      </body>
-    </html>
+      <Component {...pageProps} />
+    </>
   )
 }
 ```
 
-**Configuration Options:**
-
-All configuration parameters can be set directly in the `window.ChatMAAConfig` object:
-
-- `baseUrl` (required): Your ChatMAA instance domain
-- `email` (optional): User email address
-- `name` (optional): User name
-- `position` (optional): Launcher position - `"bottom-right"`, `"bottom-left"`, `"top-right"`, or `"top-left"` (default: `"bottom-right"`)
-- `primaryColor` (optional): Launcher button color in hex format (default: `"#2563eb"`)
-- `launcherIcon` (optional): Launcher button icon - emoji or HTML (default: `"💬"`)
-- `width` (optional): Widget width in pixels (default: `360`)
-- `height` (optional): Widget height in pixels (default: `500`)
-- `zIndex` (optional): z-index for the widget (default: `9999`)
-
-**Important:** 
-1. Copy `script.js` to your `public` folder so it's accessible at `/script.js`
-2. You can use environment variables (as shown in the first example) or set values directly in the config object (as shown in the simpler example)
-3. If using environment variables, add them to `.env.local`:
-   ```env
-   NEXT_PUBLIC_CHATMAA_BASE_URL=https://your-domain.com
-   NEXT_PUBLIC_CHATMAA_EMAIL=user@example.com
-   NEXT_PUBLIC_CHATMAA_NAME=John Doe
-   NEXT_PUBLIC_CHATMAA_POSITION=bottom-left
-   NEXT_PUBLIC_CHATMAA_PRIMARY_COLOR=#10b981
-   NEXT_PUBLIC_CHATMAA_LAUNCHER_ICON=💬
-   NEXT_PUBLIC_CHATMAA_WIDTH=400
-   NEXT_PUBLIC_CHATMAA_HEIGHT=600
-   NEXT_PUBLIC_CHATMAA_Z_INDEX=10000
-   ```
-
-## Next.js Page Router Installation
-
-### Method 1: Using Next.js Script Component in `_app.js` or `_app.tsx`
-
-This is the recommended approach for Next.js page router. Add the script to your `_app.js` or `_app.tsx` file:
-
-**`pages/_app.js` (JavaScript):**
+**`pages/_app.js` (JavaScript version):**
 
 ```javascript
 import Script from 'next/script'
@@ -231,14 +229,14 @@ function MyApp({ Component, pageProps }) {
       <Script id="chatmaa-config" strategy="beforeInteractive">
         {`
           window.ChatMAAConfig = {
-            baseUrl: "https://your-domain.com",
-            email: "user@example.com",
-            name: "John Doe"
+            baseUrl: "${process.env.NEXT_PUBLIC_CHATMAA_BASE_URL || 'https://your-instance.chatmaa.com'}",
+            ${process.env.NEXT_PUBLIC_CHATMAA_EMAIL ? `email: "${process.env.NEXT_PUBLIC_CHATMAA_EMAIL}",` : ''}
+            ${process.env.NEXT_PUBLIC_CHATMAA_NAME ? `name: "${process.env.NEXT_PUBLIC_CHATMAA_NAME}",` : ''}
           };
         `}
       </Script>
       <Script 
-        src="/path/to/script.js" 
+        src="https://cdn.chatmaa.com/js/script.js" 
         strategy="afterInteractive"
       />
       <Component {...pageProps} />
@@ -249,39 +247,11 @@ function MyApp({ Component, pageProps }) {
 export default MyApp
 ```
 
-**`pages/_app.tsx` (TypeScript):**
+### React
 
-```typescript
-import type { AppProps } from 'next/app'
-import Script from 'next/script'
+For React applications, you can use a `useEffect` hook to load the script:
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Script id="chatmaa-config" strategy="beforeInteractive">
-        {`
-          window.ChatMAAConfig = {
-            baseUrl: "https://your-domain.com",
-            email: "user@example.com",
-            name: "John Doe"
-          };
-        `}
-      </Script>
-      <Script 
-        src="/path/to/script.js" 
-        strategy="afterInteractive"
-      />
-      <Component {...pageProps} />
-    </>
-  )
-}
-```
-
-### Method 2: Using useEffect Hook
-
-If you prefer to load the script conditionally or need more control, use `useEffect`:
-
-**Create a component `components/ChatMAAWidget.tsx`:**
+**`components/ChatMAAWidget.tsx`:**
 
 ```typescript
 import { useEffect } from 'react'
@@ -310,18 +280,35 @@ declare global {
   }
 }
 
-export default function ChatMAAWidget() {
+interface ChatMAAWidgetProps {
+  baseUrl: string
+  email?: string
+  name?: string
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
+  primaryColor?: string
+}
+
+export default function ChatMAAWidget({
+  baseUrl,
+  email,
+  name,
+  position = 'bottom-right',
+  primaryColor = '#2563eb',
+}: ChatMAAWidgetProps) {
   useEffect(() => {
     // Set configuration
     window.ChatMAAConfig = {
-      baseUrl: process.env.NEXT_PUBLIC_CHATMAA_BASE_URL || 'https://your-domain.com',
-      email: process.env.NEXT_PUBLIC_CHATMAA_EMAIL,
-      name: process.env.NEXT_PUBLIC_CHATMAA_NAME,
+      baseUrl,
+      email,
+      name,
+      position,
+      primaryColor,
     }
 
-    // Load script
+    // Load script if not already loaded
+    if (!window.ChatMAA) {
     const script = document.createElement('script')
-    script.src = '/path/to/script.js'
+      script.src = 'https://cdn.chatmaa.com/js/script.js'
     script.async = true
     document.body.appendChild(script)
 
@@ -330,123 +317,325 @@ export default function ChatMAAWidget() {
       if (window.ChatMAA) {
         window.ChatMAA.destroy()
       }
-      document.body.removeChild(script)
+        if (script.parentNode) {
+          script.parentNode.removeChild(script)
+        }
+      }
     }
-  }, [])
+  }, [baseUrl, email, name, position, primaryColor])
 
   return null
 }
 ```
 
-**Then use it in `pages/_app.tsx`:**
+**Usage in your App:**
 
 ```typescript
-import type { AppProps } from 'next/app'
-import ChatMAAWidget from '../components/ChatMAAWidget'
+import ChatMAAWidget from './components/ChatMAAWidget'
 
-export default function App({ Component, pageProps }: AppProps) {
+function App() {
   return (
-    <>
-      <ChatMAAWidget />
-      <Component {...pageProps} />
-    </>
-  )
-}
-```
-
-### Method 3: Using Environment Variables
-
-Store your configuration in environment variables:
-
-**`.env.local`:**
-
-```env
-NEXT_PUBLIC_CHATMAA_BASE_URL=https://your-domain.com
-NEXT_PUBLIC_CHATMAA_EMAIL=user@example.com
-NEXT_PUBLIC_CHATMAA_NAME=John Doe
-```
-
-**`pages/_app.tsx`:**
-
-```typescript
-import type { AppProps } from 'next/app'
-import Script from 'next/script'
-
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Script id="chatmaa-config" strategy="beforeInteractive">
-        {`
-          window.ChatMAAConfig = {
-            baseUrl: "${process.env.NEXT_PUBLIC_CHATMAA_BASE_URL}",
-            ${process.env.NEXT_PUBLIC_CHATMAA_EMAIL ? `email: "${process.env.NEXT_PUBLIC_CHATMAA_EMAIL}",` : ''}
-            ${process.env.NEXT_PUBLIC_CHATMAA_NAME ? `name: "${process.env.NEXT_PUBLIC_CHATMAA_NAME}",` : ''}
-          };
-        `}
-      </Script>
-      <Script 
-        src="/path/to/script.js" 
-        strategy="afterInteractive"
+    <div>
+      <h1>My React App</h1>
+      <ChatMAAWidget 
+        baseUrl="https://your-instance.chatmaa.com"
+        email="user@example.com"
+        name="John Doe"
       />
-      <Component {...pageProps} />
-    </>
+    </div>
   )
 }
 ```
 
-### Method 4: Dynamic User Information with Next.js
-
-If you need to set user information dynamically (e.g., after authentication), create a custom hook:
-
-**`hooks/useChatMAA.ts`:**
+**Or using environment variables:**
 
 ```typescript
-import { useEffect } from 'react'
+<ChatMAAWidget 
+  baseUrl={process.env.REACT_APP_CHATMAA_BASE_URL || 'https://your-instance.chatmaa.com'}
+  email={process.env.REACT_APP_CHATMAA_EMAIL}
+  name={process.env.REACT_APP_CHATMAA_NAME}
+/>
+```
 
-interface ChatMAAUser {
+### Angular
+
+For Angular applications, add the script in your `index.html` and configure it in a service:
+
+**`index.html`:**
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>My Angular App</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <app-root></app-root>
+  
+  <!-- ChatMAA Configuration -->
+  <script>
+          window.ChatMAAConfig = {
+      baseUrl: 'https://your-instance.chatmaa.com'
+    };
+  </script>
+  
+  <!-- ChatMAA Widget -->
+  <script src="https://cdn.chatmaa.com/js/script.js"></script>
+</body>
+</html>
+```
+
+**Or use a service for dynamic configuration (`src/app/services/chatmaa.service.ts`):**
+
+```typescript
+import { Injectable } from '@angular/core'
+
+declare global {
+  interface Window {
+    ChatMAAConfig?: {
+      baseUrl: string
   email?: string
   name?: string
-}
-
-export function useChatMAA(user?: ChatMAAUser) {
-  useEffect(() => {
-    if (user && window.ChatMAA) {
-      if (user.email) window.ChatMAA.config.email = user.email
-      if (user.name) window.ChatMAA.config.name = user.name
-    } else if (user && window.ChatMAAConfig) {
-      if (user.email) window.ChatMAAConfig.email = user.email
-      if (user.name) window.ChatMAAConfig.name = user.name
+      position?: string
+      primaryColor?: string
     }
-  }, [user])
+    ChatMAA?: {
+      open: () => void
+      close: () => void
+      destroy: () => void
+      config: any
+    }
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ChatMAAService {
+  private scriptLoaded = false
+
+  init(baseUrl: string, email?: string, name?: string) {
+    window.ChatMAAConfig = {
+      baseUrl,
+      email,
+      name,
+    }
+
+    if (!this.scriptLoaded && !window.ChatMAA) {
+      const script = document.createElement('script')
+      script.src = 'https://cdn.chatmaa.com/js/script.js'
+      script.async = true
+      document.body.appendChild(script)
+      this.scriptLoaded = true
+    }
+  }
+
+  open() {
+    if (window.ChatMAA) {
+      window.ChatMAA.open()
+    }
+  }
+
+  close() {
+    if (window.ChatMAA) {
+      window.ChatMAA.close()
+    }
+  }
+
+  destroy() {
+    if (window.ChatMAA) {
+      window.ChatMAA.destroy()
+    }
+  }
 }
 ```
 
-**Usage in a page component:**
+**Usage in a component (`src/app/app.component.ts`):**
 
 ```typescript
-import { useSession } from 'next-auth/react' // or your auth solution
-import { useChatMAA } from '../hooks/useChatMAA'
+import { Component, OnInit } from '@angular/core'
+import { ChatMAAService } from './services/chatmaa.service'
 
-export default function HomePage() {
-  const { data: session } = useSession()
-  
-  useChatMAA(session?.user ? {
-    email: session.user.email,
-    name: session.user.name
-  } : undefined)
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  constructor(private chatMAAService: ChatMAAService) {}
 
-  return <div>Your page content</div>
+  ngOnInit() {
+    this.chatMAAService.init(
+      'https://your-instance.chatmaa.com',
+      'user@example.com',
+      'John Doe'
+    )
+  }
 }
 ```
 
-### Next.js Best Practices
+### Vue.js
 
-1. **Place script in `public` folder**: Copy `script.js` to `public/script.js` and reference it as `/script.js`
-2. **Use `strategy="afterInteractive"`**: This ensures the script loads after the page becomes interactive
-3. **TypeScript support**: Add type declarations for `window.ChatMAA` and `window.ChatMAAConfig` in a `types/chatmaa.d.ts` file:
+For Vue.js applications, create a plugin or component:
+
+**`src/plugins/chatmaa.js`:**
+
+```javascript
+export default {
+  install(app, options) {
+    // Set configuration
+    window.ChatMAAConfig = {
+      baseUrl: options.baseUrl,
+      email: options.email,
+      name: options.name,
+      position: options.position || 'bottom-right',
+      primaryColor: options.primaryColor || '#2563eb',
+    }
+
+    // Load script
+    if (!window.ChatMAA) {
+      const script = document.createElement('script')
+      script.src = 'https://cdn.chatmaa.com/js/script.js'
+      script.async = true
+      document.body.appendChild(script)
+    }
+  }
+}
+```
+
+**Usage in `main.js` or `main.ts`:**
+
+```javascript
+import { createApp } from 'vue'
+import App from './App.vue'
+import ChatMAAPlugin from './plugins/chatmaa'
+
+const app = createApp(App)
+
+app.use(ChatMAAPlugin, {
+  baseUrl: 'https://your-instance.chatmaa.com',
+  email: 'user@example.com',
+  name: 'John Doe'
+})
+
+app.mount('#app')
+```
+
+**Or use a composable (`src/composables/useChatMAA.js`):**
+
+```javascript
+import { onMounted, onUnmounted } from 'vue'
+
+export function useChatMAA(config) {
+  onMounted(() => {
+    window.ChatMAAConfig = {
+      baseUrl: config.baseUrl,
+      email: config.email,
+      name: config.name,
+      position: config.position || 'bottom-right',
+      primaryColor: config.primaryColor || '#2563eb',
+    }
+
+    if (!window.ChatMAA) {
+      const script = document.createElement('script')
+      script.src = 'https://cdn.chatmaa.com/js/script.js'
+      script.async = true
+      document.body.appendChild(script)
+    }
+  })
+
+  onUnmounted(() => {
+    if (window.ChatMAA) {
+      window.ChatMAA.destroy()
+    }
+  })
+}
+```
+
+**Usage in a component:**
+
+```vue
+<template>
+  <div>
+    <h1>My Vue App</h1>
+  </div>
+</template>
+
+<script setup>
+import { useChatMAA } from '@/composables/useChatMAA'
+
+useChatMAA({
+  baseUrl: 'https://your-instance.chatmaa.com',
+  email: 'user@example.com',
+  name: 'John Doe'
+})
+</script>
+```
+
+### WordPress
+
+The easiest way to add ChatMAA to WordPress is using the "Insert Headers and Footers" plugin:
+
+1. Install the **"Insert Headers and Footers"** plugin from the WordPress plugin directory
+2. Go to **Settings → Insert Headers and Footers**
+3. Paste the following code in the **"Scripts in Footer"** section:
+
+```html
+<script>
+window.ChatMAAConfig = {
+    baseUrl: "https://your-instance.chatmaa.com"
+};
+</script>
+<script src="https://cdn.chatmaa.com/js/script.js"></script>
+```
+
+Replace `https://your-instance.chatmaa.com` with your ChatMAA instance URL from [www.chatmaa.com](https://www.chatmaa.com).
+
+## Programmatic Control
+
+After the script loads, you can control the widget programmatically:
+
+```javascript
+// Open the chat widget
+window.ChatMAA.open()
+
+// Close the chat widget
+window.ChatMAA.close()
+
+// Remove the widget completely
+window.ChatMAA.destroy()
+
+// Access current configuration
+console.log(window.ChatMAA.config)
+```
+
+## Dynamic User Information
+
+Update user information dynamically (e.g., after login):
+
+```javascript
+// After user logs in
+if (window.ChatMAA) {
+    window.ChatMAA.config.email = 'newuser@example.com'
+    window.ChatMAA.config.name = 'Jane Doe'
+} else {
+    // If widget hasn't loaded yet
+    window.ChatMAAConfig = window.ChatMAAConfig || {}
+    window.ChatMAAConfig.email = 'newuser@example.com'
+    window.ChatMAAConfig.name = 'Jane Doe'
+}
+```
+
+## TypeScript Support
+
+For TypeScript projects, add type definitions:
+
+**`types/chatmaa.d.ts`:**
 
 ```typescript
-// types/chatmaa.d.ts
 interface ChatMAAConfig {
   baseUrl: string
   email?: string
@@ -476,190 +665,15 @@ declare global {
 export {}
 ```
 
-## Configuration Options
-
-Configure the widget by setting `window.ChatMAAConfig` before loading the script:
-
-```javascript
-window.ChatMAAConfig = {
-    // Required: Your ChatMAA instance base URL (domain)
-    baseUrl: "https://your-domain.com",
-    
-    // Optional: User email address
-    email: "user@example.com",
-    
-    // Optional: User name
-    name: "John Doe",
-    
-    // Optional: Position of the launcher button
-    // Options: "bottom-right", "bottom-left", "top-right", "top-left"
-    position: "bottom-right",
-    
-    // Optional: Primary color for the launcher button (hex color)
-    primaryColor: "#2563eb",
-    
-    // Optional: Launcher button icon (emoji or HTML)
-    launcherIcon: "💬",
-    
-    // Optional: Widget dimensions
-    width: 360,      // Widget width in pixels
-    height: 500,     // Widget height in pixels
-    
-    // Optional: z-index for the widget
-    zIndex: 9999
-};
-```
-
-### Configuration Examples
-
-#### Basic Configuration
-
-```javascript
-window.ChatMAAConfig = {
-    baseUrl: "https://app.chatmaa.com"
-};
-```
-
-#### Custom Domain Configuration
-
-```javascript
-window.ChatMAAConfig = {
-    baseUrl: "https://chat.yourcompany.com",
-    email: "user@example.com",
-    name: "Jane Doe"
-};
-```
-
-#### Fully Customized Configuration
-
-```javascript
-window.ChatMAAConfig = {
-    baseUrl: "https://your-domain.com",
-    email: "user@example.com",
-    name: "John Smith",
-    position: "bottom-left",
-    primaryColor: "#10b981",
-    launcherIcon: "💬",
-    width: 400,
-    height: 600,
-    zIndex: 10000
-};
-```
-
-## API Methods
-
-After the script loads, you can control the widget programmatically using `window.ChatMAA`:
-
-### `ChatMAA.open()`
-
-Opens the chat widget:
-
-```javascript
-window.ChatMAA.open();
-```
-
-### `ChatMAA.close()`
-
-Closes the chat widget:
-
-```javascript
-window.ChatMAA.close();
-```
-
-### `ChatMAA.destroy()`
-
-Completely removes the widget and launcher from the page:
-
-```javascript
-window.ChatMAA.destroy();
-```
-
-### `ChatMAA.config`
-
-Access the current configuration:
-
-```javascript
-console.log(window.ChatMAA.config);
-```
-
-## Usage Examples
-
-### Example 1: Basic Integration
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Website</title>
-</head>
-<body>
-    <h1>Welcome to My Website</h1>
-    
-    <script>
-        window.ChatMAAConfig = {
-            baseUrl: "https://app.chatmaa.com"
-        };
-    </script>
-    <script src="script.js"></script>
-</body>
-</html>
-```
-
-### Example 2: Programmatic Control
-
-```html
-<button onclick="window.ChatMAA.open()">Open Chat</button>
-<button onclick="window.ChatMAA.close()">Close Chat</button>
-<button onclick="window.ChatMAA.destroy()">Remove Widget</button>
-
-<script>
-    window.ChatMAAConfig = {
-        baseUrl: "https://app.chatmaa.com"
-    };
-</script>
-<script src="script.js"></script>
-```
-
-### Example 3: Dynamic User Information
-
-```javascript
-// Set user information dynamically after user login
-function onUserLogin(email, name) {
-    if (window.ChatMAA) {
-        window.ChatMAA.config.email = email;
-        window.ChatMAA.config.name = name;
-    } else {
-        window.ChatMAAConfig = window.ChatMAAConfig || {};
-        window.ChatMAAConfig.email = email;
-        window.ChatMAAConfig.name = name;
-    }
-}
-
-// Initialize widget
-window.ChatMAAConfig = {
-    baseUrl: "https://app.chatmaa.com"
-};
-```
-
 ## Features
 
-- **Auto-restore**: The widget automatically restores its open/closed state across page navigations using localStorage
-- **Cross-domain support**: Works with any domain by configuring the `baseUrl` parameter
-- **Customizable**: Position, colors, size, and icon can all be customized
-- **Lightweight**: Minimal JavaScript footprint
-- **No dependencies**: Pure vanilla JavaScript, no frameworks required
-- **PostMessage API**: The widget can communicate with the parent page via postMessage
-
-## PostMessage Communication
-
-The widget listens for messages from the iframe and can be controlled via postMessage:
-
-```javascript
-// From the iframe, send these messages to control the widget:
-window.parent.postMessage("chatmaa:open", "*");
-window.parent.postMessage("chatmaa:close", "*");
-window.parent.postMessage("chatmaa:destroy", "*");
-```
+- ✅ **Zero dependencies** - Pure vanilla JavaScript
+- ✅ **Lightweight** - Minimal footprint
+- ✅ **Mobile responsive** - Fullscreen on mobile, floating window on desktop
+- ✅ **Auto-restore** - Remembers open/closed state across page reloads
+- ✅ **Customizable** - Position, colors, size, and icon
+- ✅ **Cross-domain** - Works with any ChatMAA instance
+- ✅ **PostMessage API** - Communicate with the widget from your page
 
 ## Browser Support
 
@@ -667,35 +681,33 @@ window.parent.postMessage("chatmaa:destroy", "*");
 - Firefox (latest)
 - Safari (latest)
 - Edge (latest)
-
-## Notes
-
-- The script prevents double-loading automatically
-- The widget path is always `/widget` appended to your `baseUrl`
-- The launcher button is always visible unless destroyed
-- Widget state persists across page reloads using localStorage
-- **Iframe Parameters**: Only `baseUrl` (required), `email`, and `name` are passed as URL parameters to the iframe. All other configuration options are for the launcher button and widget styling only.
+- Mobile browsers (iOS Safari, Chrome Mobile)
 
 ## Troubleshooting
 
 ### Widget not appearing?
 
-1. Check that `baseUrl` is correctly set (required)
-2. Check browser console for errors
-3. Ensure the script is loaded after the configuration
+1. **Check configuration**: Ensure `baseUrl` is set correctly (required)
+2. **Check console**: Open browser DevTools and look for errors
+3. **Script order**: Make sure `window.ChatMAAConfig` is set before loading the script
+4. **CDN access**: Verify your site can access `https://cdn.chatmaa.com`
 
 ### Widget not loading content?
 
-1. Verify the `baseUrl` points to a valid ChatMAA instance
-2. Check that the domain allows iframe embedding
-3. Verify CORS settings on your ChatMAA server
+1. **Verify baseUrl**: Ensure your ChatMAA instance URL is correct
+2. **Check CORS**: Verify your ChatMAA server allows iframe embedding
+3. **Network tab**: Check browser DevTools Network tab for failed requests
 
-### Styling conflicts?
+### Styling issues?
 
-1. Adjust the `zIndex` if the widget is behind other elements
-2. Check for CSS conflicts with the launcher button ID: `#chatmaa-launcher`
+1. **z-index conflicts**: Increase `zIndex` in configuration if widget is behind other elements
+2. **CSS conflicts**: The widget uses scoped styles, but check for global CSS conflicts
+3. **Mobile issues**: Widget automatically goes fullscreen on mobile devices
+
+### Need help?
+
+Visit [www.chatmaa.com](https://www.chatmaa.com) for support and documentation.
 
 ## License
 
 [Add your license information here]
-
